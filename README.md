@@ -2,10 +2,7 @@
 
 Client Operations Hub is a calm, lightweight operations workspace for small service businesses. It combines the core ideas of a CRM, project-management tool, invoicing workspace, shared document area, and client portal in one product experience.
 
-The project is designed to serve two purposes:
-
-1. A portfolio-quality resume project that demonstrates product thinking, frontend interaction design, responsive UI implementation, and backend/security fundamentals.
-2. A realistic foundation for a future multi-tenant SaaS product for freelancers, photographers, contractors, consultants, agencies, web developers, and cleaning or landscaping businesses.
+The project is designed to serve as a realistic foundation for a future multi-tenant SaaS product for freelancers, photographers, contractors, consultants, agencies, web developers, and cleaning or landscaping businesses.
 
 The current version is a working React/Vite prototype with interactive demo state, a persistent browser-local workspace profile, and a small Express/MongoDB-ready API foundation. New workspaces intentionally start empty. The frontend does not yet persist business data to MongoDB; the README calls out those boundaries clearly so demo behavior is not confused with production behavior.
 
@@ -418,15 +415,6 @@ CLIENT_ORIGIN=http://localhost:5173
 SESSION_SECRET=replace-with-a-long-random-secret
 ```
 
-Security rules for this repository:
-
-- Never commit `.env` or `.env.*` files containing real values.
-- Keep `!.env.example` in `.gitignore` so the safe template remains shareable.
-- Never put MongoDB credentials, API keys, session secrets, customer exports, production logs, or private documents in source files.
-- Treat Vite environment variables as public if they use the `VITE_` prefix; never put server secrets in them.
-- Use the deployment platform’s secret manager in production.
-- Rotate any credential immediately if it is ever committed or pasted into an issue.
-
 ## Running locally
 
 ### Prerequisites
@@ -491,105 +479,7 @@ npm run preview
 | `build` | `vite build` | Creates the optimized production frontend bundle. |
 | `preview` | `vite preview` | Serves the built frontend locally for a production-like check. |
 
-## Security posture
 
-The project includes baseline protections appropriate for a public portfolio repository:
-
-- Environment files are ignored.
-- Demo data is synthetic.
-- New accounts never receive the example projects, example account name, example activities, or example appointments.
-- Visitor navigation is restricted to the public homepage, Detailed Overview Example, and Help center.
-- Account profile persistence stores only the display name, business name, email, and creation timestamp in browser storage; it does not store a password.
-- No authentication tokens or production credentials are present.
-- Express fingerprinting is disabled.
-- Helmet is enabled.
-- CORS has an explicit configured origin.
-- JSON payloads are size-limited.
-- Unknown routes and server failures return generic responses.
-- Private document-storage guidance is included.
-- The dependency tree was audited during development.
-
-This is not a claim that the application is production-secure yet. Before handling real customers or payments, add:
-
-- Passwordless or password-based authentication with secure, short-lived sessions.
-- Tenant isolation and authorization checks on every database query.
-- Server-side input validation and normalization.
-- Rate limiting and abuse monitoring.
-- CSRF protection when using cookie-based authentication.
-- Secure cookie flags and session rotation.
-- Password hashing with a modern password-hashing algorithm if passwords are supported.
-- Audit logging for approvals, payments, permissions, file access, and messages.
-- Private object storage with expiring signed URLs.
-- Upload allowlists, size limits, malware scanning, and content-disposition controls.
-- Payment-provider webhook signature verification.
-- Database indexes, backups, restore testing, and encryption at rest.
-- Centralized secret management and production HTTPS.
-- Security headers and a Content Security Policy tuned for the final deployment.
-- Automated dependency updates and CI security checks.
-
-## Suggested production data model
-
-The eventual MongoDB schema should be tenant-aware. A first pass could include:
-
-```text
-Tenant
-├── User
-├── Client
-│   ├── Contact details
-│   └── Portal access
-├── Project
-│   ├── Task
-│   ├── Appointment
-│   ├── Quote / Invoice
-│   ├── Document
-│   ├── Message
-│   └── Activity event
-└── Billing / subscription metadata
-```
-
-Every tenant-owned document should carry a tenant identifier, and every read/write should scope by both the authenticated principal and tenant. Client-portal links should use revocable, expiring access tokens or authenticated portal accounts rather than predictable IDs.
-
-## Production roadmap
-
-### Phase 1: persistence and API
-
-- Add Mongoose schemas and indexes.
-- Add `/api/v1` route versioning.
-- Connect the React app to a typed API client.
-- Replace in-memory state with server-fetched data.
-- Add loading, error, optimistic-update, and empty states.
-
-### Phase 2: identity and tenant security
-
-- Add user registration/invitation and authentication.
-- Add tenant membership and roles.
-- Add authorization middleware and resource-level ownership checks.
-- Add request validation and rate limiting.
-
-### Phase 3: business workflows
-
-- Persist the current Project Overview pages and project-scoped task management.
-- Add calendar persistence and reminders.
-- Add quote/invoice generation and payment provider integration.
-- Add activity event creation on the server.
-
-### Phase 4: client portal
-
-- Generate secure portal invitations.
-- Add portal authentication or magic links.
-- Persist approvals and messages.
-- Add private file storage, scanning, and signed downloads.
-- Add client notification preferences.
-
-### Phase 5: SaaS operations
-
-- Add subscription billing and plan limits.
-- Add onboarding, usage metrics, backups, monitoring, and support tooling.
-- Add automated tests, CI/CD, staging environments, and deployment documentation.
-
-## Resume-ready project summary
-
-> Built a responsive React/Vite operations platform for small service businesses, combining CRM, project tracking, appointments, invoices, documents, activity history, and a client portal. Implemented reusable dashboard components, live project search, modal-driven project creation, client quote approval, responsive mobile navigation, and a Node/Express/Mongoose API foundation with Helmet, explicit CORS, payload limits, environment-based configuration, and repository-safe secret handling.
 
 ## Current limitations
 
@@ -606,4 +496,3 @@ The following are intentionally represented as UI foundations or placeholder flo
 - No payment provider is connected.
 - No automated test suite has been added yet.
 
-Documenting these limits is part of keeping the project trustworthy: the prototype demonstrates the intended experience while making the work required for a production SaaS explicit.
